@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
   connection.query('SELECT * FROM blog', (err, rows) => {
     if(err) next(err);
 
-    res.render('list', { rows: rows });
+    res.render('list', { rows: rows, logged: req.session.logged, user: req.session.user });
   });
 });
 
@@ -29,7 +29,9 @@ router.post('/login', (req, res, next) => {
       if(rows[0].password != password) {
         res.send('<script>alert("아이디 또는 비밀번호가 다릅니다.");location.replace("/login");</script>');
       } else {
-        res.send('로그인에 성공했습니다.');   // session 추가 
+        req.session.logged = true;
+        req.session.user = rows[0].user;
+        res.redirect('/');
       }
     }
   })
@@ -62,8 +64,24 @@ router.post('/register', (req, res, next) => {
   });
 });
 
-router.get('/write', (req, res, next) => {
-  res.render('write');
+router.get('/logout', (req, res, next) => {
+  req.session.destroy();
+  res.redirect('/');
 });
 
+router.get('/write', (req, res, next) => {
+  res.render('write', { logged: req.session.logged, user: req.session.user });
+});
+
+router.post('/write',(req, res, next) => {
+  let title = req.body.title;
+  let description = req.body.description;
+  let user = req.session.user;
+
+  connection.query(`INSERT INTO blog(title, description, user, created) VALUES ('${title}', '${description}', '${user}', NOW())`, (err, result) => {
+    if(err) throw err;
+
+    res.send('<script>alert("글이 생성되었습니다.");location.replace("/");</script>');
+  });
+});
 module.exports = router;
