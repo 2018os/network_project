@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-// const connection = require('../database/index');
+const connection = require('../database/index');
 
-// connection.connect();
+connection.connect();
 /* GET home page. */
 router.get('/', (req, res, next) => {
   connection.query('SELECT * FROM blog', (err, rows) => {
