@@ -1,6 +1,6 @@
 {
   "name": "sql-injection",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -22,5 +22,18 @@
   "engines": {
     "node": "10.4.1",
     "npm": "6.4.1"
-  }
+  },
+  "description": "network_project",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2018os/network_project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/2018os/network_project/issues"
+  },
+  "homepage": "https://github.com/2018os/network_project#readme"
 }
