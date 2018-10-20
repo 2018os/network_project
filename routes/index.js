@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
   connection.query('SELECT * FROM blog', (err, rows) => {
     if(err) next(err);
 
-    res.render('list', { rows: rows, logged: req.session.logged, user_name: req.session.user_name });
+    res.render('list', { rows: rows, logged: req.session.logged, user_name: req.session.user_name, user_id: req.session });
   });
 });
 

@@ -39,12 +39,9 @@
                     </tbody>
                 </table>
                 <div class="form-group text-left">
-                    <% if(rows.user_id == user_id) { %>
+                    <% if(rows.user_id == user_id || user_id == "admin") { %>
                         <button type="submit" class="btn btn-danger" onclick="location.href='/delete/<%= rows.id %>'">
                             삭제
-                        </button>
-                        <button type="submit" class="btn btn-success" onclick="location.href='/update/<%= rows.id %>'">
-                            수정
                         </button>
                     <% } %>
                     <button type="submit" class="btn btn-primary" style="float:right;" onclick="location.href='/'">
