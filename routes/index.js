@@ -16,15 +16,25 @@ router.get('/login', (req, res, next) => {
   let user_id = req.query.user_id;
   let password = req.query.password;
   if(user_id && password) {
-    connection.query(`SELECT * FROM users WHERE user_id = '${user_id}' and password = '${password}'`, (err, rows) => {
+    connection.query(`SELECT * FROM users WHERE user_id = '${user_id}'`, (err, rows) => {
       if(err) res.send(err);
-  
 
       if(rows[0]) {
-        req.session.logged = true;
-        req.session.user_id = rows[0].user_id;
-        req.session.user_name = rows[0].user_name;
-        res.redirect('/');
+        res.send('<script>alert("true");</script>');
+        connection.query(`SELECT * FROM users WHERE password = '${password}'`, (err, rows) => {
+          if(err) res.send(err);
+
+
+          if(rows[0]) {
+            req.session.logged = true;
+            req.session.user_id = rows.user_id;
+            req.session.user_name = rows.user_name;
+            console.log(rows);
+            res.redirect('/');
+          } else {
+            console.log('false');
+          }
+        });
       } else {
         res.send('<script>alert("아이디 또는 비밀번호가 틀립니다.");</script>');
       }
@@ -34,20 +44,23 @@ router.get('/login', (req, res, next) => {
   }
 });
 
-router.post('/login', (req, res, next) => {
+router.post('/login', (req, res, next, error) => {
   let body = req.body;
   let user_id = body.user_id;
   let password = body.password;
-  connection.query(`SELECT * FROM users WHERE user_id = '${user_id}' and password = '${password}'`, (err, rows) => {
-    if(err) res.send(err);;
+  connection.query(`SELECT * FROM users WHERE user_id = '${user_id}'`, (err, rows) => {
+    if(err) res.send(error);
 
     if(rows[0]) {
-      req.session.logged = true;
-      req.session.user_id = rows[0].user_id;
-      req.session.user_name = rows[0].user_name;
-      res.redirect('/');
+      res.send('<script>alert("true");</script>')
+      connection.query(`SELECT * FROM users WHERE password = '${password}'`, (err, rows) => {
+        req.session.logged = true;
+        req.session.user_id = rows[0].user_id;
+        req.session.user_name = rows[0].user_name;
+        res.redirect('/');
+      });
     } else {
-      res.send('<script>alert("아이디 또는 비밀번호가 틀립니다.");location.replace("/login");</script>');
+      res.send('<script>alert("아이디 또는 비밀번호가 틀립니다.");</script>');
     }
   });
 });
