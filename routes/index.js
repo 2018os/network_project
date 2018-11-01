@@ -13,46 +13,17 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-  let user_id = req.query.user_id;
-  let password = req.query.password;
-  if(user_id && password) {
-    connection.query(`SELECT * FROM users WHERE user_id = '${user_id}'`, (err, rows) => {
-      if(err) res.send(err);
-
-      if(rows[0]) {
-        res.send('<script>alert("true");</script>');
-        connection.query(`SELECT * FROM users WHERE password = '${password}'`, (err, rows) => {
-          if(err) res.send(err);
-
-
-          if(rows[0]) {
-            req.session.logged = true;
-            req.session.user_id = rows.user_id;
-            req.session.user_name = rows.user_name;
-            console.log(rows);
-            res.redirect('/');
-          } else {
-            console.log('false');
-          }
-        });
-      } else {
-        res.send('<script>alert("아이디 또는 비밀번호가 틀립니다.");</script>');
-      }
-    });
-  } else {
-    res.render('login');
-  }
+  res.render('login');
 });
 
-router.post('/login', (req, res, next, error) => {
+router.post('/login', (req, res, next) => {
   let body = req.body;
   let user_id = body.user_id;
   let password = body.password;
   connection.query(`SELECT * FROM users WHERE user_id = '${user_id}'`, (err, rows) => {
-    if(err) res.send(error);
+    if(err) res.send(err);
 
     if(rows[0]) {
-      res.send('<script>alert("true");</script>')
       connection.query(`SELECT * FROM users WHERE password = '${password}'`, (err, rows) => {
         req.session.logged = true;
         req.session.user_id = rows[0].user_id;
@@ -84,7 +55,7 @@ router.post('/register', (req, res, next) => {
       res.send('<script>alert("아이디가 중복됩니다.");location.replace("/register");</script>');
     } else {
       connection.query(`INSERT INTO users(user_name, user_id, password) VALUES ('${user_name}', '${user_id}', '${password}')`, (err, result) => {
-        if(err) res.send(err);;
+        if(err) res.send(err);
 
         res.send('<script>alert("계정이 생성되었습니다. 로그인 해주세요");location.replace("/");</script>');
       });
